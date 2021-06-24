@@ -1010,9 +1010,10 @@ Lane = require('./lane');
 settings = require('../settings');
 
 Road = (function() {
-  function Road(source, target) {
+  function Road(source, target, maxLanesNumber) {
     this.source = source;
     this.target = target;
+    this.maxLanesNumber = maxLanesNumber;
     this.id = _.uniqueId('road');
     this.lanes = [];
     this.lanesNumber = null;
@@ -1076,7 +1077,7 @@ Road = (function() {
     this.targetSideId = this.target.rect.getSectorId(this.source.rect.center());
     this.targetSide = this.target.rect.getSide(this.targetSideId).subsegment(0, 0.5);
     this.lanesNumber = min(this.sourceSide.length, this.targetSide.length) | 0;
-    this.lanesNumber = max(2, this.lanesNumber / settings.gridSize | 0);
+    this.lanesNumber = max(this.maxLanesNumber || 2, this.lanesNumber / settings.gridSize | 0);
     sourceSplits = this.sourceSide.split(this.lanesNumber, true);
     targetSplits = this.targetSide.split(this.lanesNumber);
     if ((this.lanes == null) || this.lanes.length < this.lanesNumber) {
@@ -1457,12 +1458,12 @@ World = (function() {
   };
 
   World.prototype.generateMap = function(minX, maxX, minY, maxY) {
-    var gridSize, intersection, intersectionsNumber, map, previous, rect, step, x, y, _i, _j, _k, _l;
+    var gridSize, intersection, intersectionXY, intersectionsNumber, map, p, rect, step, x, y, _i, _len;
     if (minX == null) {
-      minX = -2;
+      minX = -4;
     }
     if (maxX == null) {
-      maxX = 2;
+      maxX = 5;
     }
     if (minY == null) {
       minY = -2;
@@ -1472,54 +1473,47 @@ World = (function() {
     }
     this.clear();
     intersectionsNumber = (0.8 * (maxX - minX + 1) * (maxY - minY + 1)) | 0;
+    console.log('intersectionsNumber=', intersectionsNumber);
     map = {};
     gridSize = settings.gridSize;
     step = 5 * gridSize;
     this.carsNumber = 100;
-    while (intersectionsNumber > 0) {
-      x = _.random(minX, maxX);
-      y = _.random(minY, maxY);
-      if (map[[x, y]] == null) {
-        rect = new Rect(step * x, step * y, gridSize, gridSize);
-        intersection = new Intersection(rect);
-        this.addIntersection(map[[x, y]] = intersection);
-        intersectionsNumber -= 1;
-      }
+    intersectionXY = [[-5, -2], [-4, -2], [-3, -2], [3, -2], [4, -2], [5, -2], [6, -2], [-2, -1], [2, -1], [0, 0], [4, 0], [5, 0], [6, 0], [-5, 1], [-4, 1], [-5, 2], [6, 2]];
+    for (_i = 0, _len = intersectionXY.length; _i < _len; _i++) {
+      p = intersectionXY[_i];
+      x = p[0];
+      y = p[1];
+      rect = new Rect(step * x, step * y, gridSize, gridSize);
+      intersection = new Intersection(rect);
+      this.addIntersection(map[[x, y]] = intersection);
     }
-    for (x = _i = minX; minX <= maxX ? _i <= maxX : _i >= maxX; x = minX <= maxX ? ++_i : --_i) {
-      previous = null;
-      for (y = _j = minY; minY <= maxY ? _j <= maxY : _j >= maxY; y = minY <= maxY ? ++_j : --_j) {
-        intersection = map[[x, y]];
-        if (intersection != null) {
-          if (random() < 0.9) {
-            if (previous != null) {
-              this.addRoad(new Road(intersection, previous));
-            }
-            if (previous != null) {
-              this.addRoad(new Road(previous, intersection));
-            }
-          }
-          previous = intersection;
-        }
-      }
-    }
-    for (y = _k = minY; minY <= maxY ? _k <= maxY : _k >= maxY; y = minY <= maxY ? ++_k : --_k) {
-      previous = null;
-      for (x = _l = minX; minX <= maxX ? _l <= maxX : _l >= maxX; x = minX <= maxX ? ++_l : --_l) {
-        intersection = map[[x, y]];
-        if (intersection != null) {
-          if (random() < 0.9) {
-            if (previous != null) {
-              this.addRoad(new Road(intersection, previous));
-            }
-            if (previous != null) {
-              this.addRoad(new Road(previous, intersection));
-            }
-          }
-          previous = intersection;
-        }
-      }
-    }
+    this.addRoad(new Road(map[[6, -2]], map[[-5, -2]], 3));
+    this.addRoad(new Road(map[[-5, 2]], map[[6, 2]], 4));
+    this.addRoad(new Road(map[[6, 2]], map[[-5, 2]], 4));
+    this.addRoad(new Road(map[[-5, -2]], map[[-5, 2]], 2));
+    this.addRoad(new Road(map[[-5, 2]], map[[-5, -2]], 2));
+    this.addRoad(new Road(map[[6, -2]], map[[6, 2]], 4));
+    this.addRoad(new Road(map[[6, 2]], map[[6, -2]], 4));
+    this.addRoad(new Road(map[[-4, -2]], map[[-4, 1]], 1));
+    this.addRoad(new Road(map[[-4, 1]], map[[-4, -2]], 1));
+    this.addRoad(new Road(map[[-4, 1]], map[[-5, 1]], 1));
+    this.addRoad(new Road(map[[-5, 1]], map[[-4, 1]], 1));
+    this.addRoad(new Road(map[[-3, -2]], map[[-2, -1]], 1));
+    this.addRoad(new Road(map[[-2, -1]], map[[-3, -2]], 1));
+    this.addRoad(new Road(map[[-2, -1]], map[[0, 0]], 1));
+    this.addRoad(new Road(map[[0, 0]], map[[-2, -1]], 1));
+    this.addRoad(new Road(map[[3, -2]], map[[2, -1]], 1));
+    this.addRoad(new Road(map[[2, -1]], map[[3, -2]], 1));
+    this.addRoad(new Road(map[[2, -1]], map[[0, 0]], 1));
+    this.addRoad(new Road(map[[0, 0]], map[[2, -1]], 1));
+    this.addRoad(new Road(map[[4, -2]], map[[4, 0]], 1));
+    this.addRoad(new Road(map[[4, 0]], map[[4, -2]], 1));
+    this.addRoad(new Road(map[[4, 0]], map[[5, 0]], 1));
+    this.addRoad(new Road(map[[5, 0]], map[[4, 0]], 1));
+    this.addRoad(new Road(map[[5, -2]], map[[5, 0]], 1));
+    this.addRoad(new Road(map[[5, 0]], map[[5, -2]], 1));
+    this.addRoad(new Road(map[[5, 0]], map[[6, 0]], 1));
+    this.addRoad(new Road(map[[6, 0]], map[[5, 0]], 1));
     return null;
   };
 
@@ -1640,7 +1634,7 @@ settings = {
   },
   fps: 30,
   lightsFlipInterval: 160,
-  gridSize: 14,
+  gridSize: 8,
   defaultTimeFactor: 5
 };
 
@@ -8873,12 +8867,12 @@ dat.utils.common),
 dat.dom.dom,
 dat.utils.common);
 },{}],30:[function(require,module,exports){
-/*! Copyright (c) 2013 Brandon Aaron (http://brandon.aaron.sh)
- * Licensed under the MIT License (LICENSE.txt).
+/*!
+ * jQuery Mousewheel 3.1.13
  *
- * Version: 3.1.12
- *
- * Requires: jQuery 1.2.2+
+ * Copyright jQuery Foundation and other contributors
+ * Released under the MIT license
+ * http://jquery.org/license
  */
 
 (function (factory) {
@@ -9097,7 +9091,7 @@ dat.utils.common);
 
 },{}],31:[function(require,module,exports){
 /*!
- * jQuery JavaScript Library v2.1.3
+ * jQuery JavaScript Library v2.1.4
  * http://jquery.com/
  *
  * Includes Sizzle.js
@@ -9107,7 +9101,7 @@ dat.utils.common);
  * Released under the MIT license
  * http://jquery.org/license
  *
- * Date: 2014-12-18T15:11Z
+ * Date: 2015-04-28T16:01Z
  */
 
 (function( global, factory ) {
@@ -9165,7 +9159,7 @@ var
 	// Use the correct document accordingly with window argument (sandbox)
 	document = window.document,
 
-	version = "2.1.3",
+	version = "2.1.4",
 
 	// Define a local copy of jQuery
 	jQuery = function( selector, context ) {
@@ -9629,7 +9623,12 @@ jQuery.each("Boolean Number String Function Array Date RegExp Object Error".spli
 });
 
 function isArraylike( obj ) {
-	var length = obj.length,
+
+	// Support: iOS 8.2 (not reproducible in simulator)
+	// `in` check used to prevent JIT error (gh-2145)
+	// hasOwn isn't used here due to false negatives
+	// regarding Nodelist length in IE
+	var length = "length" in obj && obj.length,
 		type = jQuery.type( obj );
 
 	if ( type === "function" || jQuery.isWindow( obj ) ) {

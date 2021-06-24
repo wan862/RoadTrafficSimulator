@@ -47,39 +47,92 @@ class World
       road.target = @getIntersection road.target
       @addRoad road
 
-  generateMap: (minX = -2, maxX = 2, minY = -2, maxY = 2) ->
+  generateMap: (minX = -4, maxX = 5, minY = -2, maxY = 2) ->
     @clear()
     intersectionsNumber = (0.8 * (maxX - minX + 1) * (maxY - minY + 1)) | 0
+    console.log('intersectionsNumber=', intersectionsNumber)
     map = {}
     gridSize = settings.gridSize
     step = 5 * gridSize
     @carsNumber = 100
-    while intersectionsNumber > 0
-      x = _.random minX, maxX
-      y = _.random minY, maxY
-      unless map[[x, y]]?
-        rect = new Rect step * x, step * y, gridSize, gridSize
-        intersection = new Intersection rect
-        @addIntersection map[[x, y]] = intersection
-        intersectionsNumber -= 1
-    for x in [minX..maxX]
-      previous = null
-      for y in [minY..maxY]
-        intersection = map[[x, y]]
-        if intersection?
-          if random() < 0.9
-            @addRoad new Road intersection, previous if previous?
-            @addRoad new Road previous, intersection if previous?
-          previous = intersection
-    for y in [minY..maxY]
-      previous = null
-      for x in [minX..maxX]
-        intersection = map[[x, y]]
-        if intersection?
-          if random() < 0.9
-            @addRoad new Road intersection, previous if previous?
-            @addRoad new Road previous, intersection if previous?
-          previous = intersection
+
+    # while intersectionsNumber > 0
+    #   x = _.random minX, maxX
+    #   y = _.random minY, maxY
+    #   console.log('x=', x, '|y=', y)
+    #   unless map[[x, y]]?
+    #     rect = new Rect step * x, step * y, gridSize, gridSize
+    #     intersection = new Intersection rect
+    #     @addIntersection map[[x, y]] = intersection
+    #     intersectionsNumber -= 1
+    intersectionXY = [
+      [-5,-2], [-4,-2], [-3,-2], [3,-2], [4,-2],[5,-2],[6,-2], 
+      [-2,-1], [2,-1],
+      [0,0], [4,0], [5,0], [6,0], 
+      [-5,1], [-4,1],
+      [-5,2], [6,2]
+    ]
+    for p in intersectionXY
+      x = p[0]
+      y = p[1]
+      rect = new Rect step * x, step * y, gridSize, gridSize
+      intersection = new Intersection rect
+      @addIntersection map[[x, y]] = intersection
+
+    # bukit timah road
+    @addRoad new Road map[[6,-2]], map[[-5,-2]], 3
+    # holland road
+    @addRoad new Road map[[-5,2]], map[[6,2]], 4 
+    @addRoad new Road map[[6,2]], map[[-5,2]], 4
+    # sixth aventh
+    @addRoad new Road map[[-5,-2]], map[[-5,2]], 2
+    @addRoad new Road map[[-5,2]], map[[-5,-2]], 2
+    # adam road
+    @addRoad new Road map[[6,-2]], map[[6,2]], 4
+    @addRoad new Road map[[6,2]], map[[6,-2]], 4
+    # namly road
+    @addRoad new Road map[[-4,-2]], map[[-4,1]], 1
+    @addRoad new Road map[[-4,1]], map[[-4,-2]], 1
+    @addRoad new Road map[[-4,1]], map[[-5,1]], 1
+    @addRoad new Road map[[-5,1]], map[[-4,1]], 1
+    # hci circular
+    @addRoad new Road map[[-3,-2]], map[[-2,-1]], 1
+    @addRoad new Road map[[-2,-1]], map[[-3,-2]], 1
+    @addRoad new Road map[[-2,-1]], map[[0,0]], 1
+    @addRoad new Road map[[0,0]], map[[-2,-1]], 1
+
+    @addRoad new Road map[[3,-2]], map[[2,-1]], 1
+    @addRoad new Road map[[2,-1]], map[[3,-2]], 1
+    @addRoad new Road map[[2,-1]], map[[0,0]], 1
+    @addRoad new Road map[[0,0]], map[[2,-1]], 1
+    # king's road
+    @addRoad new Road map[[4,-2]], map[[4,0]], 1
+    @addRoad new Road map[[4,0]], map[[4,-2]], 1
+    @addRoad new Road map[[4,0]], map[[5,0]], 1
+    @addRoad new Road map[[5,0]], map[[4,0]], 1
+    # queen's road
+    @addRoad new Road map[[5,-2]], map[[5,0]], 1
+    @addRoad new Road map[[5,0]], map[[5,-2]], 1
+    @addRoad new Road map[[5,0]], map[[6,0]], 1
+    @addRoad new Road map[[6,0]], map[[5,0]], 1
+    # for x in [minX..maxX]
+    #   previous = null
+    #   for y in [minY..maxY]
+    #     intersection = map[[x, y]]
+    #     if intersection?
+    #       if random() < 0.9
+    #         @addRoad new Road intersection, previous if previous?
+    #         @addRoad new Road previous, intersection if previous?
+    #       previous = intersection
+    # for y in [minY..maxY]
+    #   previous = null
+    #   for x in [minX..maxX]
+    #     intersection = map[[x, y]]
+    #     if intersection?
+    #       if random() < 0.9
+    #         @addRoad new Road intersection, previous if previous?
+    #         @addRoad new Road previous, intersection if previous?
+    #       previous = intersection
     null
 
 
