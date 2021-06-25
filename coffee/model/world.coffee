@@ -50,7 +50,6 @@ class World
   generateMap: (minX = -4, maxX = 5, minY = -2, maxY = 2) ->
     @clear()
     intersectionsNumber = (0.8 * (maxX - minX + 1) * (maxY - minY + 1)) | 0
-    console.log('intersectionsNumber=', intersectionsNumber)
     map = {}
     gridSize = settings.gridSize
     step = 5 * gridSize
@@ -66,11 +65,13 @@ class World
     #     @addIntersection map[[x, y]] = intersection
     #     intersectionsNumber -= 1
     intersectionXY = [
-      [-5,-2], [-4,-2], [-3,-2], [3,-2], [4,-2],[5,-2],[6,-2], 
+      [6,-3],
+      [-5,-2], [-4,-2], [-3,-2], [-2,-2], [2,-2], [4,-2],[5,-2],[6,-2], [7,-2]
       [-2,-1], [2,-1],
       [0,0], [4,0], [5,0], [6,0], 
-      [-5,1], [-4,1],
-      [-5,2], [6,2]
+      [-4,1], [-3,1],
+      [-5,2], [-4,2], [6,2],[7,2],
+      [6,3]
     ]
     for p in intersectionXY
       x = p[0]
@@ -80,31 +81,61 @@ class World
       @addIntersection map[[x, y]] = intersection
 
     # bukit timah road
-    @addRoad new Road map[[6,-2]], map[[-5,-2]], 3
+    @roadBukitTimah1 = new Road map[[7,-2]], map[[6,-2]], 3
+    @addRoad @roadBukitTimah1
+    @roadBukitTimah2 = new Road map[[6,-2]], map[[5,-2]], 3
+    @addRoad @roadBukitTimah2
+    @roadBukitTimah3 = new Road map[[5,-2]], map[[4,-2]], 3
+    @addRoad @roadBukitTimah3
+    @roadBukitTimah4 = new Road map[[4,-2]], map[[2,-2]], 3
+    @addRoad @roadBukitTimah4
+    @addRoad new Road map[[2,-2]], map[[-2,-2]], 3
+    @addRoad new Road map[[-2,-2]], map[[-3,-2]], 3
+    @addRoad new Road map[[-3,-2]], map[[-4,-2]], 3
+    @addRoad new Road map[[-4,-2]], map[[-5,-2]], 3
     # holland road
-    @addRoad new Road map[[-5,2]], map[[6,2]], 4 
-    @addRoad new Road map[[6,2]], map[[-5,2]], 4
+    @addRoad new Road map[[-5,2]], map[[-4,2]], 4 
+    @addRoad new Road map[[-4,2]], map[[-5,2]], 4 
+    @roadHolland3 = new Road map[[-4,2]], map[[6,2]], 4 
+    @addRoad @roadHolland3
+    @roadHolland4 = new Road map[[6,2]], map[[-4,2]], 4
+    @addRoad @roadHolland4
+    @addRoad new Road map[[6,2]], map[[7,2]], 4
+    @addRoad new Road map[[7,2]], map[[6,2]], 4
     # sixth aventh
-    @addRoad new Road map[[-5,-2]], map[[-5,2]], 2
-    @addRoad new Road map[[-5,2]], map[[-5,-2]], 2
+    @addRoad new Road map[[-4,-2]], map[[-4,1]], 2
+    @addRoad new Road map[[-4,1]], map[[-4,-2]], 2
+    @addRoad new Road map[[-4,1]], map[[-4,2]], 2
+    @roadSixAve4 = new Road map[[-4,2]], map[[-4,1]], 2
+    @addRoad @roadSixAve4
     # adam road
-    @addRoad new Road map[[6,-2]], map[[6,2]], 4
-    @addRoad new Road map[[6,2]], map[[6,-2]], 4
+    @addRoad new Road map[[6,-3]], map[[6,-2]], 4
+    @addRoad new Road map[[6,-2]], map[[6,-3]], 4
+    @addRoad new Road map[[6,-2]], map[[6,0]], 4
+    @roadAdam4 = new Road map[[6,0]], map[[6,-2]], 4
+    @addRoad @roadAdam4
+    @roadAdam5 = new Road map[[6,0]], map[[6,2]], 4
+    @addRoad @roadAdam5
+    @addRoad new Road map[[6,2]], map[[6,0]], 4
+    @addRoad new Road map[[6,2]], map[[6,3]], 4
+    @addRoad new Road map[[6,3]], map[[6,2]], 4
     # namly road
-    @addRoad new Road map[[-4,-2]], map[[-4,1]], 1
-    @addRoad new Road map[[-4,1]], map[[-4,-2]], 1
-    @addRoad new Road map[[-4,1]], map[[-5,1]], 1
-    @addRoad new Road map[[-5,1]], map[[-4,1]], 1
+    @addRoad new Road map[[-3,-2]], map[[-3,1]], 1
+    @roadNamlyRoad2 = new Road map[[-3,1]], map[[-3,-2]], 1
+    @addRoad @roadNamlyRoad2
+    @addRoad new Road map[[-3,1]], map[[-4,1]], 1
+    @roadNamlyRoad4 = new Road map[[-4,1]], map[[-3,1]], 1
+    @addRoad @roadNamlyRoad4
     # hci circular
-    @addRoad new Road map[[-3,-2]], map[[-2,-1]], 1
-    @addRoad new Road map[[-2,-1]], map[[-3,-2]], 1
-    @addRoad new Road map[[-2,-1]], map[[0,0]], 1
+    #@addRoad new Road map[[-2,-2]], map[[-2,-1]], 1
+    @addRoad new Road map[[-2,-1]], map[[-2,-2]], 1
+    #@addRoad new Road map[[-2,-1]], map[[0,0]], 1
     @addRoad new Road map[[0,0]], map[[-2,-1]], 1
 
-    @addRoad new Road map[[3,-2]], map[[2,-1]], 1
-    @addRoad new Road map[[2,-1]], map[[3,-2]], 1
+    @addRoad new Road map[[2,-2]], map[[2,-1]], 1
+    #@addRoad new Road map[[2,-1]], map[[2,-2]], 1
     @addRoad new Road map[[2,-1]], map[[0,0]], 1
-    @addRoad new Road map[[0,0]], map[[2,-1]], 1
+    #@addRoad new Road map[[0,0]], map[[2,-1]], 1
     # king's road
     @addRoad new Road map[[4,-2]], map[[4,0]], 1
     @addRoad new Road map[[4,0]], map[[4,-2]], 1
@@ -150,6 +181,16 @@ class World
       @removeCar car unless car.alive
 
   refreshCars: ->
+    @addCar new Car @roadBukitTimah2.leftmostLane
+    @addCar new Car @roadBukitTimah4.leftmostLane
+    # @addCar new Car @roadBukitTimah4.leftmostLane
+    # @addCar new Car @roadSixAve4.leftmostLane
+    @addCar new Car @roadNamlyRoad2.leftmostLane
+    @addCar new Car @roadAdam4.leftmostLane
+    # @addCar new Car @roadAdam5.leftmostLane
+    @addCar new Car @roadHolland3.leftmostLane
+    @addCar new Car @roadHolland4.leftmostLane
+    # @addCar new Car @roadAdam4.leftmostLane
     @addRandomCar() if @cars.length < @carsNumber
     @removeRandomCar() if @cars.length > @carsNumber
 

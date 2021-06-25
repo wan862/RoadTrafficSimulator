@@ -1473,12 +1473,11 @@ World = (function() {
     }
     this.clear();
     intersectionsNumber = (0.8 * (maxX - minX + 1) * (maxY - minY + 1)) | 0;
-    console.log('intersectionsNumber=', intersectionsNumber);
     map = {};
     gridSize = settings.gridSize;
     step = 5 * gridSize;
     this.carsNumber = 100;
-    intersectionXY = [[-5, -2], [-4, -2], [-3, -2], [3, -2], [4, -2], [5, -2], [6, -2], [-2, -1], [2, -1], [0, 0], [4, 0], [5, 0], [6, 0], [-5, 1], [-4, 1], [-5, 2], [6, 2]];
+    intersectionXY = [[6, -3], [-5, -2], [-4, -2], [-3, -2], [-2, -2], [2, -2], [4, -2], [5, -2], [6, -2], [7, -2], [-2, -1], [2, -1], [0, 0], [4, 0], [5, 0], [6, 0], [-4, 1], [-3, 1], [-5, 2], [-4, 2], [6, 2], [7, 2], [6, 3]];
     for (_i = 0, _len = intersectionXY.length; _i < _len; _i++) {
       p = intersectionXY[_i];
       x = p[0];
@@ -1487,25 +1486,51 @@ World = (function() {
       intersection = new Intersection(rect);
       this.addIntersection(map[[x, y]] = intersection);
     }
-    this.addRoad(new Road(map[[6, -2]], map[[-5, -2]], 3));
-    this.addRoad(new Road(map[[-5, 2]], map[[6, 2]], 4));
-    this.addRoad(new Road(map[[6, 2]], map[[-5, 2]], 4));
-    this.addRoad(new Road(map[[-5, -2]], map[[-5, 2]], 2));
-    this.addRoad(new Road(map[[-5, 2]], map[[-5, -2]], 2));
-    this.addRoad(new Road(map[[6, -2]], map[[6, 2]], 4));
-    this.addRoad(new Road(map[[6, 2]], map[[6, -2]], 4));
-    this.addRoad(new Road(map[[-4, -2]], map[[-4, 1]], 1));
-    this.addRoad(new Road(map[[-4, 1]], map[[-4, -2]], 1));
-    this.addRoad(new Road(map[[-4, 1]], map[[-5, 1]], 1));
-    this.addRoad(new Road(map[[-5, 1]], map[[-4, 1]], 1));
-    this.addRoad(new Road(map[[-3, -2]], map[[-2, -1]], 1));
-    this.addRoad(new Road(map[[-2, -1]], map[[-3, -2]], 1));
-    this.addRoad(new Road(map[[-2, -1]], map[[0, 0]], 1));
+    this.roadBukitTimah1 = new Road(map[[7, -2]], map[[6, -2]], 3);
+    this.addRoad(this.roadBukitTimah1);
+    this.roadBukitTimah2 = new Road(map[[6, -2]], map[[5, -2]], 3);
+    this.addRoad(this.roadBukitTimah2);
+    this.roadBukitTimah3 = new Road(map[[5, -2]], map[[4, -2]], 3);
+    this.addRoad(this.roadBukitTimah3);
+    this.roadBukitTimah4 = new Road(map[[4, -2]], map[[2, -2]], 3);
+    this.addRoad(this.roadBukitTimah4);
+    this.addRoad(new Road(map[[2, -2]], map[[-2, -2]], 3));
+    this.addRoad(new Road(map[[-2, -2]], map[[-3, -2]], 3));
+    this.addRoad(new Road(map[[-3, -2]], map[[-4, -2]], 3));
+    this.addRoad(new Road(map[[-4, -2]], map[[-5, -2]], 3));
+    this.addRoad(new Road(map[[-5, 2]], map[[-4, 2]], 4));
+    this.addRoad(new Road(map[[-4, 2]], map[[-5, 2]], 4));
+    this.roadHolland3 = new Road(map[[-4, 2]], map[[6, 2]], 4);
+    this.addRoad(this.roadHolland3);
+    this.roadHolland4 = new Road(map[[6, 2]], map[[-4, 2]], 4);
+    this.addRoad(this.roadHolland4);
+    this.addRoad(new Road(map[[6, 2]], map[[7, 2]], 4));
+    this.addRoad(new Road(map[[7, 2]], map[[6, 2]], 4));
+    this.addRoad(new Road(map[[-4, -2]], map[[-4, 1]], 2));
+    this.addRoad(new Road(map[[-4, 1]], map[[-4, -2]], 2));
+    this.addRoad(new Road(map[[-4, 1]], map[[-4, 2]], 2));
+    this.roadSixAve4 = new Road(map[[-4, 2]], map[[-4, 1]], 2);
+    this.addRoad(this.roadSixAve4);
+    this.addRoad(new Road(map[[6, -3]], map[[6, -2]], 4));
+    this.addRoad(new Road(map[[6, -2]], map[[6, -3]], 4));
+    this.addRoad(new Road(map[[6, -2]], map[[6, 0]], 4));
+    this.roadAdam4 = new Road(map[[6, 0]], map[[6, -2]], 4);
+    this.addRoad(this.roadAdam4);
+    this.roadAdam5 = new Road(map[[6, 0]], map[[6, 2]], 4);
+    this.addRoad(this.roadAdam5);
+    this.addRoad(new Road(map[[6, 2]], map[[6, 0]], 4));
+    this.addRoad(new Road(map[[6, 2]], map[[6, 3]], 4));
+    this.addRoad(new Road(map[[6, 3]], map[[6, 2]], 4));
+    this.addRoad(new Road(map[[-3, -2]], map[[-3, 1]], 1));
+    this.roadNamlyRoad2 = new Road(map[[-3, 1]], map[[-3, -2]], 1);
+    this.addRoad(this.roadNamlyRoad2);
+    this.addRoad(new Road(map[[-3, 1]], map[[-4, 1]], 1));
+    this.roadNamlyRoad4 = new Road(map[[-4, 1]], map[[-3, 1]], 1);
+    this.addRoad(this.roadNamlyRoad4);
+    this.addRoad(new Road(map[[-2, -1]], map[[-2, -2]], 1));
     this.addRoad(new Road(map[[0, 0]], map[[-2, -1]], 1));
-    this.addRoad(new Road(map[[3, -2]], map[[2, -1]], 1));
-    this.addRoad(new Road(map[[2, -1]], map[[3, -2]], 1));
+    this.addRoad(new Road(map[[2, -2]], map[[2, -1]], 1));
     this.addRoad(new Road(map[[2, -1]], map[[0, 0]], 1));
-    this.addRoad(new Road(map[[0, 0]], map[[2, -1]], 1));
     this.addRoad(new Road(map[[4, -2]], map[[4, 0]], 1));
     this.addRoad(new Road(map[[4, 0]], map[[4, -2]], 1));
     this.addRoad(new Road(map[[4, 0]], map[[5, 0]], 1));
@@ -1548,6 +1573,12 @@ World = (function() {
   };
 
   World.prototype.refreshCars = function() {
+    this.addCar(new Car(this.roadBukitTimah2.leftmostLane));
+    this.addCar(new Car(this.roadBukitTimah4.leftmostLane));
+    this.addCar(new Car(this.roadNamlyRoad2.leftmostLane));
+    this.addCar(new Car(this.roadAdam4.leftmostLane));
+    this.addCar(new Car(this.roadHolland3.leftmostLane));
+    this.addCar(new Car(this.roadHolland4.leftmostLane));
     if (this.cars.length < this.carsNumber) {
       this.addRandomCar();
     }
