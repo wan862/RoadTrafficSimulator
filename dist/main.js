@@ -1073,9 +1073,9 @@ Road = (function() {
       throw Error('incomplete road');
     }
     this.sourceSideId = this.source.rect.getSectorId(this.target.rect.center());
-    this.sourceSide = this.source.rect.getSide(this.sourceSideId).subsegment(0.5, 1.0);
+    this.sourceSide = this.source.rect.getSide(this.sourceSideId).subsegment(0, 0.5);
     this.targetSideId = this.target.rect.getSectorId(this.source.rect.center());
-    this.targetSide = this.target.rect.getSide(this.targetSideId).subsegment(0, 0.5);
+    this.targetSide = this.target.rect.getSide(this.targetSideId).subsegment(0.5, 1.0);
     this.lanesNumber = min(this.sourceSide.length, this.targetSide.length) | 0;
     this.lanesNumber = max(this.maxLanesNumber || 2, this.lanesNumber / settings.gridSize | 0);
     sourceSplits = this.sourceSide.split(this.lanesNumber, true);
