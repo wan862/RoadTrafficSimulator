@@ -40,6 +40,9 @@ class Road
     side2 = other.sourceSideId
     # 0 - left, 1 - forward, 2 - right
     turnNumber = (side2 - side1 - 1 + 8) % 4
+    return 2 if turnNumber == 0
+    return 0 if turnNumber == 2
+    return 1
 
   update: ->
     throw Error 'incomplete road' unless @source and @target
