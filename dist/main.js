@@ -1573,12 +1573,11 @@ World = (function() {
   };
 
   World.prototype.refreshCars = function() {
-    this.addCar(new Car(this.roadBukitTimah2.leftmostLane));
-    this.addCar(new Car(this.roadBukitTimah4.leftmostLane));
+    this.addCar(new Car(_.sample(this.roadBukitTimah2.lanes)));
+    this.addCar(new Car(_.sample(this.roadBukitTimah4.lanes)));
     this.addCar(new Car(this.roadNamlyRoad2.leftmostLane));
-    this.addCar(new Car(this.roadAdam4.leftmostLane));
-    this.addCar(new Car(this.roadHolland3.leftmostLane));
-    this.addCar(new Car(this.roadHolland4.leftmostLane));
+    this.addCar(new Car(_.sample(this.roadAdam4.lanes)));
+    this.addCar(new Car(_.sample(this.roadHolland3.lanes)));
     if (this.cars.length < this.carsNumber) {
       this.addRandomCar();
     }

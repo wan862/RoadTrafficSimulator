@@ -181,15 +181,14 @@ class World
       @removeCar car unless car.alive
 
   refreshCars: ->
-    @addCar new Car @roadBukitTimah2.leftmostLane
-    @addCar new Car @roadBukitTimah4.leftmostLane
+    @addCar new Car _.sample @roadBukitTimah2.lanes
+    @addCar new Car _.sample @roadBukitTimah4.lanes
     # @addCar new Car @roadBukitTimah4.leftmostLane
     # @addCar new Car @roadSixAve4.leftmostLane
     @addCar new Car @roadNamlyRoad2.leftmostLane
-    @addCar new Car @roadAdam4.leftmostLane
+    @addCar new Car _.sample @roadAdam4.lanes
     # @addCar new Car @roadAdam5.leftmostLane
-    @addCar new Car @roadHolland3.leftmostLane
-    @addCar new Car @roadHolland4.leftmostLane
+    @addCar new Car _.sample @roadHolland3.lanes
     # @addCar new Car @roadAdam4.leftmostLane
     @addRandomCar() if @cars.length < @carsNumber
     @removeRandomCar() if @cars.length > @carsNumber
