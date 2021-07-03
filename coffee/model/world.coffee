@@ -52,8 +52,9 @@ class World
     intersectionsNumber = (0.8 * (maxX - minX + 1) * (maxY - minY + 1)) | 0
     map = {}
     gridSize = settings.gridSize
-    step = 4 * gridSize
+    step = 3 * gridSize
     @carsNumber = 100
+    @timer = 0
 
     # while intersectionsNumber > 0
     #   x = _.random minX, maxX
@@ -70,8 +71,8 @@ class World
       [-2,-1], [2,-1],
       [0,0], [4,0], [5,0], [6,0], 
       [-7,1], [-3,1],
-      [-8,2], [-7,2], [6,2],[7,2],
-      [6,3]
+      [-8,4], [-7,4], [6,4],[7,4],
+      [6,5]
     ]
     for p in intersectionXY
       x = p[0]
@@ -80,6 +81,10 @@ class World
       intersection = new Intersection rect
       @addIntersection map[[x, y]] = intersection
 
+    # dunearn road
+    # @addRoad new Road map[[-8,-2]], map[[-7,-2]], 3
+    # @addRoad new Road map[[-7,-2]], map[[6,-2]], 3
+    # @addRoad new Road map[[6,-2]], map[[7,-2]], 3
     # bukit timah road
     @roadBukitTimah1 = new Road map[[7,-2]], map[[6,-2]], 3
     @addRoad @roadBukitTimah1
@@ -94,31 +99,32 @@ class World
     @addRoad new Road map[[-3,-2]], map[[-7,-2]], 3
     @addRoad new Road map[[-7,-2]], map[[-8,-2]], 3
     # holland road
-    @addRoad new Road map[[-8,2]], map[[-7,2]], 4 
-    @addRoad new Road map[[-7,2]], map[[-8,2]], 4 
-    @roadHolland3 = new Road map[[-7,2]], map[[6,2]], 4 
+    @addRoad new Road map[[-8,4]], map[[-7,4]], 4 
+    @addRoad new Road map[[-7,4]], map[[-8,4]], 4 
+    @roadHolland3 = new Road map[[-7,4]], map[[6,4]], 4 
     @addRoad @roadHolland3
-    @roadHolland4 = new Road map[[6,2]], map[[-7,2]], 4
+    @roadHolland4 = new Road map[[6,4]], map[[-7,4]], 4
     @addRoad @roadHolland4
-    @addRoad new Road map[[6,2]], map[[7,2]], 4
-    @addRoad new Road map[[7,2]], map[[6,2]], 4
+    @addRoad new Road map[[6,4]], map[[7,4]], 4
+    @addRoad new Road map[[7,4]], map[[6,4]], 4
     # sixth aventh
     @addRoad new Road map[[-7,-2]], map[[-7,1]], 2
     @addRoad new Road map[[-7,1]], map[[-7,-2]], 2
-    @addRoad new Road map[[-7,1]], map[[-7,2]], 2
-    @roadSixAve4 = new Road map[[-7,2]], map[[-7,1]], 2
+    @addRoad new Road map[[-7,1]], map[[-7,4]], 2
+    @roadSixAve4 = new Road map[[-7,4]], map[[-7,1]], 2
     @addRoad @roadSixAve4
     # adam road
-    @addRoad new Road map[[6,-3]], map[[6,-2]], 4
+    @roadAdam1 = new Road map[[6,-3]], map[[6,-2]], 4
+    @addRoad @roadAdam1
     @addRoad new Road map[[6,-2]], map[[6,-3]], 4
     @addRoad new Road map[[6,-2]], map[[6,0]], 4
     @roadAdam4 = new Road map[[6,0]], map[[6,-2]], 4
     @addRoad @roadAdam4
-    @roadAdam5 = new Road map[[6,0]], map[[6,2]], 4
+    @roadAdam5 = new Road map[[6,0]], map[[6,4]], 4
     @addRoad @roadAdam5
-    @addRoad new Road map[[6,2]], map[[6,0]], 4
-    @addRoad new Road map[[6,2]], map[[6,3]], 4
-    @addRoad new Road map[[6,3]], map[[6,2]], 4
+    @addRoad new Road map[[6,4]], map[[6,0]], 4
+    @addRoad new Road map[[6,4]], map[[6,5]], 4
+    @addRoad new Road map[[6,5]], map[[6,4]], 4
     # namly road
     @addRoad new Road map[[-3,-2]], map[[-3,1]], 1
     @roadNamlyRoad2 = new Road map[[-3,1]], map[[-3,-2]], 1
@@ -181,14 +187,19 @@ class World
       @removeCar car unless car.alive
 
   refreshCars: ->
-    @addCar new Car _.sample @roadBukitTimah2.lanes
-    @addCar new Car _.sample @roadBukitTimah4.lanes
-    # @addCar new Car @roadBukitTimah4.leftmostLane
-    # @addCar new Car @roadSixAve4.leftmostLane
     @addCar new Car @roadNamlyRoad2.leftmostLane
-    @addCar new Car _.sample @roadAdam4.lanes
-    # @addCar new Car @roadAdam5.leftmostLane
-    @addCar new Car _.sample @roadHolland3.lanes
+    @timer = (@timer + 1) % 4
+    if @timer == 0
+      @addCar new Car @roadNamlyRoad4.leftmostLane
+      @addCar new Car _.sample @roadBukitTimah2.lanes
+      @addCar new Car _.sample @roadBukitTimah4.lanes
+      # @addCar new Car @roadBukitTimah4.leftmostLane
+      # @addCar new Car @roadSixAve4.leftmostLane
+      # @addCar new Car _.sample @roadAdam1.lanes
+      @addCar new Car _.sample @roadAdam4.lanes
+      @addCar new Car _.sample @roadAdam5.lanes
+      @addCar new Car _.sample @roadHolland3.lanes
+      @addCar new Car _.sample @roadHolland4.lanes
     # @addCar new Car @roadAdam4.leftmostLane
     @addRandomCar() if @cars.length < @carsNumber
     @removeRandomCar() if @cars.length > @carsNumber

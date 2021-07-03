@@ -100,9 +100,10 @@ class Trajectory
     throw Error 'no next lane' unless nextLane?
     throw Error 'next lane == current lane' if nextLane is @lane
     throw Error 'not neighbouring lanes' unless @lane.road is nextLane.road
-    nextPosition = @current.position + 3 * @car.length
-    throw Error 'too late to change lane' unless nextPosition < @lane.length
+    nextPosition = min @current.position + 3 * @car.length, @lane.length-1
     @_startChangingLanes nextLane, nextPosition
+    # else
+    #   throw Error 'too late to change lane' unless nextPosition < @lane.length
 
   _getIntersectionLaneChangeCurve: ->
 
